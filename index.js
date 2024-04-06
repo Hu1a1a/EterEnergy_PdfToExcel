@@ -20,7 +20,7 @@ async function main() {
     const file = fs.readdirSync(FolderPath + w.name);
     for (const f of file) {
       const pdfData = await extractTextFromPDF(FolderPath + w.name + "/" + f);
-      if (w.name === "nexus") console.log(pdfData);
+      //if (w.name === "nexus") console.log(pdfData);
       const lines = pdfData.text.split("\n");
       const extractedData = extractData(lines, w.getSheetValues());
       await writeDataToExcel(extractedData, ExcelOutputPath, w.name, f);
@@ -49,7 +49,11 @@ const extractData = (lines, parameter) => {
             }
           }
           if (parameter[i + 1][9]) {
-            data[parameter[i + 1][1]] = data[parameter[i + 1][1]].substring(parameter[i + 1][9]);
+            if (parameter[i + 1][9] > 0) {
+              data[parameter[i + 1][1]] = data[parameter[i + 1][1]].substring(parameter[i + 1][9]);
+            } else {
+              data[parameter[i + 1][1]] = data[parameter[i + 1][1]].slice(parameter[i + 1][9]);
+            }
           }
         }
       }
