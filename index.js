@@ -16,19 +16,22 @@ async function main() {
     .getColumn(1)
     .eachCell((value) => parameterrow.push(...[value.value.toString()]));
   worksheetResumen.addRow(parameterrow);
+  i = 0;
   for (const w of workbook.worksheets) {
     const file = fs.readdirSync(FolderPath + w.name);
     for (const f of file) {
+      i++;
       const pdfData = await extractTextFromPDF(FolderPath + w.name + "/" + f);
       //if (w.name === "nexus") console.log(pdfData);
       const lines = pdfData.text.split("\n");
-      const extractedData = extractData(lines, w.getSheetValues());
-      await writeDataToExcel(extractedData, ExcelOutputPath, w.name, f);
+      const extractedData = extractData(lines, w.getSheetValues(), i);
+      await writeDataToExcel(extractedData, w.name, f);
     }
   }
+  await workbookResumen.xlsx.writeFile(ExcelOutputPath);
 }
 
-const extractData = (lines, parameter) => {
+const extractData = (lines, parameter, indexx) => {
   const data = {};
   for (let i = 1; i < parameter.length - 1; i++) data[parameter[i + 1][1]] = "";
   lines.forEach((line, index) => {
@@ -55,7 +58,16 @@ const extractData = (lines, parameter) => {
               data[parameter[i + 1][1]] = data[parameter[i + 1][1]].slice(parameter[i + 1][9]);
             }
           }
+          if (parameter[i + 1][3] === "€") {
+            data[parameter[i + 1][1]] = parseFloat(data[parameter[i + 1][1]]);
+          }
         }
+      } else if (parameter[i + 1][10]) {
+        data[parameter[i + 1][1]] = parameter[i + 1][10];
+      } else if (parameter[i + 1][11]) {
+        data[parameter[i + 1][1]] = { formula: parameter[i + 1][11].replaceAll("xRx", indexx + 1) };
+      } else {
+        data[parameter[i + 1][1]] = null;
       }
     }
   });
@@ -70,9 +82,8 @@ async function extractTextFromPDF(pdfPath) {
 const workbookResumen = new ExcelJS.Workbook();
 const worksheetResumen = workbookResumen.addWorksheet("Resumen");
 
-async function writeDataToExcel(data, excelPath, name, f) {
+async function writeDataToExcel(data, name, f) {
   row = [name, f];
   Object.keys(data).forEach((key) => row.push(...[data[key]]));
   worksheetResumen.addRow(row);
-  await workbookResumen.xlsx.writeFile(excelPath);
 }
