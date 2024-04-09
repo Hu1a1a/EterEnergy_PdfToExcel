@@ -1,6 +1,7 @@
 const fs = require("fs");
 const pdfParse = require("pdf-parse");
 const ExcelJS = require("exceljs");
+const { parse } = require("querystring");
 
 const ParameterPath = "./archivos/PdfToExcel_Parametros.xlsx";
 const ExcelOutputPath = "./archivos/ExcelResumenFactura.xlsx";
@@ -22,7 +23,7 @@ async function main() {
     for (const f of file) {
       i++;
       const pdfData = await extractTextFromPDF(FolderPath + w.name + "/" + f);
-      //if (w.name === "nexus") console.log(pdfData);
+      //if (w.name === "naturgy") console.log(pdfData);
       const lines = pdfData.text.split("\n");
       const extractedData = extractData(lines, w.getSheetValues(), i);
       await writeDataToExcel(extractedData, w.name, f);
@@ -33,7 +34,7 @@ async function main() {
 
 const extractData = (lines, parameter, indexx) => {
   const data = {};
-  for (let i = 1; i < parameter.length - 1; i++) data[parameter[i + 1][1]] = "";
+  for (let i = 1; i < parameter.length - 1; i++) data[parameter[i + 1][1]] = null;
   lines.forEach((line, index) => {
     for (let i = 1; i < parameter.length - 1; i++) {
       if (parameter[i + 1][2]) {
@@ -43,27 +44,25 @@ const extractData = (lines, parameter, indexx) => {
             data[parameter[i + 1][1]] = lines[index + parameter[i + 1][8]]?.trim();
           }
           if (parameter[i + 1][3] && !data[parameter[i + 1][1]].includes(parameter[i + 1][3])) {
-            data[parameter[i + 1][1]] = "";
-          }
-          if (parameter[i + 1][4]) {
-            data[parameter[i + 1][1]] = data[parameter[i + 1][1]].split(parameter[i + 1][4])[parameter[i + 1][5]]?.trim();
-            if (parameter[i + 1][6]) {
-              data[parameter[i + 1][1]] = data[parameter[i + 1][1]].split(parameter[i + 1][6])[parameter[i + 1][7]]?.trim();
+            data[parameter[i + 1][1]] = null;
+          } else {
+            if (parameter[i + 1][4]) {
+              data[parameter[i + 1][1]] = data[parameter[i + 1][1]].split(parameter[i + 1][4])[parameter[i + 1][5]]?.trim();
+              if (parameter[i + 1][6]) {
+                data[parameter[i + 1][1]] = data[parameter[i + 1][1]].split(parameter[i + 1][6])[parameter[i + 1][7]]?.trim();
+              }
             }
-          }
-          if (parameter[i + 1][9]) {
-            if (parameter[i + 1][9] > 0) {
-              data[parameter[i + 1][1]] = data[parameter[i + 1][1]].substring(parameter[i + 1][9]);
-            } else {
-              data[parameter[i + 1][1]] = data[parameter[i + 1][1]].slice(parameter[i + 1][9]);
+            if (parameter[i + 1][9]) {
+              if (parameter[i + 1][9] > 0) {
+                data[parameter[i + 1][1]] = data[parameter[i + 1][1]].substring(parameter[i + 1][9])?.trim();
+              } else {
+                data[parameter[i + 1][1]] = data[parameter[i + 1][1]].slice(parameter[i + 1][9])?.trim();
+              }
             }
-          }
-          if (parameter[i + 1][3] === "€") {
-            data[parameter[i + 1][1]] = parseFloat(data[parameter[i + 1][1]]);
           }
         }
       } else if (parameter[i + 1][10]) {
-        data[parameter[i + 1][1]] = parameter[i + 1][10];
+        data[parameter[i + 1][1]] = parameter[i + 1][10]?.trim();
       } else if (parameter[i + 1][11]) {
         data[parameter[i + 1][1]] = { formula: parameter[i + 1][11].replaceAll("xRx", indexx + 1) };
       } else {
