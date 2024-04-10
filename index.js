@@ -1,7 +1,6 @@
 const fs = require("fs");
 const pdfParse = require("pdf-parse");
 const ExcelJS = require("exceljs");
-const { parse } = require("querystring");
 
 const ParameterPath = "./archivos/PdfToExcel_Parametros.xlsx";
 const ExcelOutputPath = "./archivos/ExcelResumenFactura.xlsx";
@@ -11,7 +10,7 @@ main();
 async function main() {
   const workbook = new ExcelJS.Workbook();
   await workbook.xlsx.readFile(ParameterPath);
-  const parameterrow = ["archivo"];
+  const parameterrow = [];
   workbook
     .getWorksheet(1)
     .getColumn(1)
@@ -23,7 +22,7 @@ async function main() {
     for (const f of file) {
       i++;
       const pdfData = await extractTextFromPDF(FolderPath + w.name + "/" + f);
-      //if (w.name === "naturgy") console.log(pdfData);
+      if (w.name === "repsol") console.log(pdfData.text);
       const lines = pdfData.text.split("\n");
       const extractedData = extractData(lines, w.getSheetValues(), i);
       await writeDataToExcel(extractedData, w.name, f);
@@ -61,6 +60,7 @@ const extractData = (lines, parameter, indexx) => {
             }
           }
         }
+        data[parameter[i + 1][1]] = data[parameter[i + 1][1]]?.trim().replaceAll("xYYx", "");
       } else if (parameter[i + 1][10]) {
         data[parameter[i + 1][1]] = parameter[i + 1][10]?.trim();
       } else if (parameter[i + 1][11]) {
@@ -75,14 +75,33 @@ const extractData = (lines, parameter, indexx) => {
 
 async function extractTextFromPDF(pdfPath) {
   const dataBuffer = fs.readFileSync(pdfPath);
-  return await pdfParse(dataBuffer);
+  return await pdfParse(dataBuffer, { pagerender: render_page, version: "v2.0.550" });
+}
+function render_page(pageData) {
+  let render_options = {
+    normalizeWhitespace: true,
+    disableCombineTextItems: true,
+  };
+  return pageData.getTextContent(render_options).then(function (textContent) {
+    let lastY,
+      text = "";
+    for (let item of textContent.items) {
+      if (lastY == item.transform[5] || !lastY) {
+        text += "xYYx" + item.str;
+      } else {
+        text += "\n" + item.str;
+      }
+      lastY = item.transform[5];
+    }
+    return text;
+  });
 }
 
 const workbookResumen = new ExcelJS.Workbook();
 const worksheetResumen = workbookResumen.addWorksheet("Resumen");
 
 async function writeDataToExcel(data, name, f) {
-  row = [name, f];
+  row = [name + "_" + f];
   Object.keys(data).forEach((key) => row.push(...[data[key]]));
   worksheetResumen.addRow(row);
 }
