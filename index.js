@@ -1,13 +1,16 @@
 const fs = require("fs");
 const pdfParse = require("pdf-parse");
 const ExcelJS = require("exceljs");
+const path = require("path");
 
-const ParameterPath = "./archivos/PdfToExcel_Parametros.xlsx";
-const ExcelOutputPath = "./archivos/ExcelResumenFactura.xlsx";
-const FolderPath = "./archivos/";
+const AbsPath = path.resolve();
+const ParameterPath = AbsPath + "\\PdfToExcel_Parametros.xlsx";
+const FolderPath = AbsPath + "\\archivos\\";
+const ExcelOutputPath = AbsPath + "\\ExcelResumenFactura.xlsx";
 
 main();
 async function main() {
+  console.log("Se esta procediendo a la transformación de PDF a Excel!");
   const workbook = new ExcelJS.Workbook();
   await workbook.xlsx.readFile(ParameterPath);
   const parameterrow = [];
@@ -22,7 +25,6 @@ async function main() {
     for (const f of file) {
       i++;
       const pdfData = await extractTextFromPDF(FolderPath + w.name + "/" + f);
-      if (w.name === "repsol") console.log(pdfData.text);
       const lines = pdfData.text.split("\n");
       const extractedData = extractData(lines, w.getSheetValues(), i);
       await writeDataToExcel(extractedData, w.name, f);

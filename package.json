@@ -1,10 +1,21 @@
 {
-  "name": "pdftoexcel",
+  "name": "eterenergy_pdftoexcel",
   "version": "1.0.0",
-  "description": "",
+  "description": "build to eter energy to transform pdf to excel",
+  "authors": "YK Web Studio - Yang Ye",
   "main": "index.js",
+  "bin": "index.js",
   "scripts": {
     "dev": "node index"
+  },
+  "pkg": {
+    "assets": [
+      "node_modules/**/*"
+    ],
+    "targets": [
+      "node18"
+    ],
+    "output": "EterEnergy_PdfToExcel.exe"
   },
   "keywords": [],
   "author": "",
