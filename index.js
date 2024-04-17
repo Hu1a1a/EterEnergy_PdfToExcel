@@ -2,6 +2,7 @@ const fs = require("fs");
 const pdfParse = require("pdf-parse");
 const ExcelJS = require("exceljs");
 const path = require("path");
+const exec = require("child_process").exec;
 
 const AbsPath = path.resolve();
 const ParameterPath = AbsPath + "\\PdfToExcel_Parametros.xlsx";
@@ -31,6 +32,7 @@ async function main() {
     }
   }
   await workbookResumen.xlsx.writeFile(ExcelOutputPath);
+  exec("start " + ExcelOutputPath);
 }
 
 const extractData = (lines, parameter, indexx) => {

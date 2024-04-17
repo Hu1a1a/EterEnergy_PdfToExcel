@@ -6,7 +6,8 @@
   "main": "index.js",
   "bin": "index.js",
   "scripts": {
-    "dev": "node index"
+    "dev": "node index",
+    "pack": "pkg ."
   },
   "pkg": {
     "assets": [
