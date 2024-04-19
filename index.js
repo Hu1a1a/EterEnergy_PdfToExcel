@@ -32,7 +32,7 @@ async function main() {
     }
   }
   await workbookResumen.xlsx.writeFile(ExcelOutputPath);
-  exec("start " + ExcelOutputPath);
+  exec(`start "" "${ExcelOutputPath}"`);
 }
 
 const extractData = (lines, parameter, indexx) => {
