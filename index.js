@@ -11,7 +11,12 @@ const ExcelOutputPath = AbsPath + "\\ExcelResumenFactura.xlsx";
 
 main();
 async function main() {
-  console.log("Se esta procediendo a la transformación de PDF a Excel!");
+  console.log(
+    `
+    Se esta procediendo a la transformación de PDF a Excel!
+    Dedicado a EterEnergy S.L.
+    Autor: YK Web Studio - Yang Ye
+  `);
   const workbook = new ExcelJS.Workbook();
   await workbook.xlsx.readFile(ParameterPath);
   const parameterrow = [];
