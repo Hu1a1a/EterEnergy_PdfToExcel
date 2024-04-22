@@ -8,15 +8,18 @@ const AbsPath = path.resolve();
 const ParameterPath = AbsPath + "\\PdfToExcel_Parametros.xlsx";
 const FolderPath = AbsPath + "\\archivos\\";
 const ExcelOutputPath = AbsPath + "\\ExcelResumenFactura.xlsx";
+console.log(
+  `
+  Se esta procediendo a la transformación de PDF a Excel!
+  
+  Dedicado a EterEnergy S.L.
+  Autor: YK Web Studio - Yang Ye
+  Contacto: https://hu1a1a.github.io/YK-Web-Studio/
 
+`
+);
 main();
 async function main() {
-  console.log(
-    `
-    Se esta procediendo a la transformación de PDF a Excel!
-    Dedicado a EterEnergy S.L.
-    Autor: YK Web Studio - Yang Ye
-  `);
   const workbook = new ExcelJS.Workbook();
   await workbook.xlsx.readFile(ParameterPath);
   const parameterrow = [];
@@ -32,6 +35,7 @@ async function main() {
       i++;
       const pdfData = await extractTextFromPDF(FolderPath + w.name + "/" + f);
       const lines = pdfData.text.split("\n");
+      //if (w.name + "_" + f === "repsol_0e8c2e4863ca37b3aa48344b4acb3cd9.pdf") console.log(lines);
       const extractedData = extractData(lines, w.getSheetValues(), i);
       await writeDataToExcel(extractedData, w.name, f);
     }
