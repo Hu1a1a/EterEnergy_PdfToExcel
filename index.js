@@ -76,7 +76,6 @@ const extractData = (lines, parameter, indexx) => {
           }
         }
         data[parameter[i + 1][1]] = data[parameter[i + 1][1]]?.trim().replaceAll("xYYx", "");
-        data[parameter[i + 1][1]] = data[parameter[i + 1][1]]?.trim().replace("-", "");
       } else if (parameter[i + 1][10]) {
         data[parameter[i + 1][1]] = parameter[i + 1][10]?.trim();
       } else if (parameter[i + 1][11]) {
