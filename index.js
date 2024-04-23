@@ -60,9 +60,14 @@ const extractData = (lines, parameter, indexx) => {
               data[parameter[i + 1][1]] = null;
             } else {
               if (parameter[i + 1][4]) {
-                data[parameter[i + 1][1]] = data[parameter[i + 1][1]].split(parameter[i + 1][4])[parameter[i + 1][5]]?.trim();
+                if (data[parameter[i + 1][1]].split(parameter[i + 1][4])[parameter[i + 1][5]]?.trim())
+                  data[parameter[i + 1][1]] = data[parameter[i + 1][1]].split(parameter[i + 1][4])[parameter[i + 1][5]]?.trim();
+                else data[parameter[i + 1][1]] = data[parameter[i + 1][1]].split(parameter[i + 1][4])[parameter[i + 1][5] + 1]?.trim();
+
                 if (parameter[i + 1][6]) {
-                  data[parameter[i + 1][1]] = data[parameter[i + 1][1]].split(parameter[i + 1][6])[parameter[i + 1][7]]?.trim();
+                  if (data[parameter[i + 1][1]].split(parameter[i + 1][6])[parameter[i + 1][7]]?.trim())
+                    data[parameter[i + 1][1]] = data[parameter[i + 1][1]].split(parameter[i + 1][6])[parameter[i + 1][7]]?.trim();
+                  else data[parameter[i + 1][1]] = data[parameter[i + 1][1]].split(parameter[i + 1][6])[parameter[i + 1][7] + 1]?.trim();
                 }
               }
               if (parameter[i + 1][9]) {
