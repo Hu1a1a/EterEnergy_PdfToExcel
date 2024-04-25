@@ -35,7 +35,7 @@ async function main() {
       i++;
       const pdfData = await extractTextFromPDF(FolderPath + w.name + "/" + f);
       const lines = pdfData.text.split("\n");
-      //if (w.name + "_" + f === "repsol_0e8c2e4863ca37b3aa48344b4acb3cd9.pdf") console.log(lines);
+      if (w.name + "_" + f === "endesa_xxx (1).pdf") console.log(lines);
       const extractedData = extractData(lines, w.getSheetValues(), i);
       await writeDataToExcel(extractedData, w.name, f);
     }
