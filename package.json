@@ -7,6 +7,7 @@
   "bin": "index.js",
   "scripts": {
     "dev": "node index",
+    "dev2": "node index2",
     "pack": "pkg ."
   },
   "pkg": {
