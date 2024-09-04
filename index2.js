@@ -2,11 +2,15 @@ const fs = require("fs");
 const pdfParse = require("pdf-parse");
 const ExcelJS = require("exceljs");
 const path = require("path");
+const { KeyObject } = require("crypto");
 const exec = require("child_process").exec;
 
 const AbsPath = path.resolve();
 const FolderPath = AbsPath + "\\archivos2\\";
 const ExcelOutputPath = AbsPath + "\\ExcelResumenFactura2.xlsx";
+const columna = {
+  1: "Oferta", 2: "CUPS", 3: "Precio", 4: "Companya", 5: "Repetido"
+}
 console.log(
   `
   Se esta procediendo a la transformación de PDF a Excel!
@@ -98,7 +102,7 @@ async function writeDataToExcel(data) {
 }
 async function paintColor(data) {
   const dataR = encontrarRepetidos(data.map((a) => a['1'] + a['2'] + parseFloat(a['3'])))
-  for (const d in dataR) if (dataR[d]) worksheetResumen.getCell(+d + 1, 10).value = "repeated"
+  for (const d in dataR) if (dataR[d]) worksheetResumen.getCell(+d + 1, +Object.keys(columna)[Object.keys(columna).length - 1]).value = "repeated"
 }
 
 function encontrarRepetidos(array) {
