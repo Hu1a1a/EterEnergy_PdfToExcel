@@ -2,15 +2,13 @@ const fs = require("fs");
 const pdfParse = require("pdf-parse");
 const ExcelJS = require("exceljs");
 const path = require("path");
-const { KeyObject } = require("crypto");
 const exec = require("child_process").exec;
-
+const workbookResumen = new ExcelJS.Workbook();
+const worksheetResumen = workbookResumen.addWorksheet("Resumen");
 const AbsPath = path.resolve();
 const FolderPath = AbsPath + "\\archivos2\\";
 const ExcelOutputPath = AbsPath + "\\ExcelResumenFactura2.xlsx";
-const columna = {
-  1: "Oferta", 2: "CUPS", 3: "Precio", 4: "Companya", 5: "Repetido"
-}
+const columna = ["Oferta", "CUPS", "Precio", "Companya", "Repetido"]
 console.log(
   `
   Se esta procediendo a la transformación de PDF a Excel!
@@ -23,12 +21,12 @@ console.log(
 );
 main();
 async function main() {
+  worksheetResumen.addRow(columna)
   const file = fs.readdirSync(FolderPath);
   const AllDatas = []
   for (const f of file) {
     const pdfData = await extractTextFromPDF(FolderPath + "/" + f);
     const lines = pdfData.text.split("\n");
-    if (f == "8006.pdf") { console.log(lines) }
     const extractedDatas = extractData(lines, f);
     for (const extractedData of extractedDatas) await writeDataToExcel(extractedData)
     AllDatas.push(...extractedDatas)
@@ -37,6 +35,7 @@ async function main() {
   await workbookResumen.xlsx.writeFile(ExcelOutputPath);
   exec(`start "" "${ExcelOutputPath}"`);
 }
+
 const extractData = (lines, filename) => {
   const data = [];
   let i = -1
@@ -92,17 +91,26 @@ function render_page(pageData) {
   });
 }
 
-const workbookResumen = new ExcelJS.Workbook();
-const worksheetResumen = workbookResumen.addWorksheet("Resumen");
+
 
 async function writeDataToExcel(data) {
   row = [];
   Object.keys(data).forEach((key) => row.push(...[data[key]]));
   worksheetResumen.addRow(row);
 }
+
 async function paintColor(data) {
-  const dataR = encontrarRepetidos(data.map((a) => a['1'] + a['2'] + parseFloat(a['3'])))
-  for (const d in dataR) if (dataR[d]) worksheetResumen.getCell(+d + 1, +Object.keys(columna)[Object.keys(columna).length - 1]).value = "repeated"
+  const dataR = encontrarRepetidos(data.map((a) => a['2'] + parseFloat(a['3'])))
+  for (const d in dataR) {
+    if (dataR[d]) {
+      worksheetResumen.getRow(+d + 2).fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "FFFF7D7D" },
+        bgColor: { argb: "FF000000" }
+      }
+    }
+  }
 }
 
 function encontrarRepetidos(array) {
