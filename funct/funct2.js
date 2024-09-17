@@ -9,18 +9,8 @@ const AbsPath = path.resolve();
 const FolderPath = AbsPath + "\\archivos2\\";
 const ExcelOutputPath = AbsPath + "\\ExcelResumenFactura2.xlsx";
 const columna = ["Oferta", "CUPS", "Precio", "Companya", "Repetido"]
-console.log(
-  `
-  Se esta procediendo a la transformación de PDF a Excel!
-  
-  Dedicado a EterEnergy S.L.
-  Autor: YK Web Studio - Yang Ye
-  Contacto: https://hu1a1a.github.io/YK-Web-Studio/
 
-`
-);
-main();
-async function main() {
+module.exports.main2 = async () => {
   worksheetResumen.addRow(columna)
   const file = fs.readdirSync(FolderPath);
   const AllDatas = []

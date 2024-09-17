@@ -3,13 +3,11 @@
   "version": "1.0.0",
   "description": "build to eter energy to transform pdf to excel",
   "authors": "YK Web Studio - Yang Ye",
-  "main": "main.js",
+  "main": "main/main.js",
   "scripts": {
-    "start": "electron-forge start",
+    "start": "electron .",
     "package": "electron-forge package",
-    "make": "electron-forge make",
-    "dev": "node index",
-    "dev2": "node index2"
+    "make": "electron-forge make"
   },
   "pkg": {
     "assets": [
@@ -25,7 +23,8 @@
   "license": "ISC",
   "dependencies": {
     "exceljs": "^4.4.0",
-    "pdf-parse": "^1.1.1"
+    "pdf-parse": "^1.1.1",
+    "pdfjs-dist": "^4.6.82"
   },
   "devDependencies": {
     "@electron-forge/cli": "^7.4.0",

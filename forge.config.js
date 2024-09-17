@@ -12,13 +12,19 @@ module.exports = {
       "ExcelResumenFactura.xlsx",
       "ExcelResumenFactura2.xlsx",
     ],
+    icon: 'assets/logo-etergy.ico',
+
   },
   rebuildConfig: {},
   makers: [
     {
       name: '@electron-forge/maker-squirrel',
-      config: {}
+      config: {
+        icon: 'assets/logo-etergy.ico',
+        setupIcon: 'assets/logo-etergy.ico',
+      }
+
     }
   ],
-  plugins: [  ],
+  plugins: [],
 };
