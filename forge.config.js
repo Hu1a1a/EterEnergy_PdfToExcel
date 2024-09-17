@@ -2,16 +2,6 @@ module.exports = {
   packagerConfig: {
     name: "EterEnergy PDFtoExcel",
     asar: false,
-    ignore: [
-      "node_modules",
-      "archivos/endesa/",
-      "archivos/naturgy/",
-      "archivos/nexus/",
-      "archivos/repsol/",
-      "archivos2/",
-      "ExcelResumenFactura.xlsx",
-      "ExcelResumenFactura2.xlsx",
-    ],
     icon: 'assets/logo-etergy.ico',
 
   },

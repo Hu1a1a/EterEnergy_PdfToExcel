@@ -4,11 +4,11 @@ const ExcelJS = require("exceljs");
 const path = require("path");
 const exec = require("child_process").exec;
 const AbsPath = path.resolve();
-const ParameterPath = AbsPath + "\\data\\PdfToExcel_Parametros.xlsx";
-const FolderPath = AbsPath + "\\archivos\\";
-const ExcelOutputPath = AbsPath + "\\data\\ExcelResumenFactura.xlsx";
+const ParameterPath = AbsPath + "\\resources\\app" + "\\data\\PdfToExcel_Parametros.xlsx";
+const FolderPath = AbsPath + "\\resources\\app" + "\\archivos\\";
+const ExcelOutputPath = AbsPath + "\\resources\\app" + "\\data\\ExcelResumenFactura.xlsx";
 
-module.exports.main = async (res) => {
+module.exports.main = async () => {
   const workbook = new ExcelJS.Workbook();
   await workbook.xlsx.readFile(ParameterPath);
   const parameterrow = [];

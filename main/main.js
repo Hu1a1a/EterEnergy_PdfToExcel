@@ -9,6 +9,7 @@ const { main2 } = require('../funct/funct2');
 
 server.get("/funct1", (req, res) => main().then(() => res.sendStatus(200)));
 server.get("/funct2", (req, res) => main2().then(() => res.sendStatus(200)));
+server.get("/check", (req, res) => res.send(absPath));
 server.listen(4321);
 
 const createWindow = () => {

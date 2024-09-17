@@ -6,8 +6,8 @@ const exec = require("child_process").exec;
 const workbookResumen = new ExcelJS.Workbook();
 const worksheetResumen = workbookResumen.addWorksheet("Resumen");
 const AbsPath = path.resolve();
-const FolderPath = AbsPath + "\\archivos2\\";
-const ExcelOutputPath = AbsPath + "\\data\\ExcelResumenFactura2.xlsx";
+const FolderPath = AbsPath + "\\resources\\app" + "\\archivos2\\";
+const ExcelOutputPath = AbsPath + "\\resources\\app" + "\\data\\ExcelResumenFactura2.xlsx";
 const columna = ["Oferta", "CUPS", "Precio", "Companya", "Repetido"]
 
 module.exports.main2 = async () => {

@@ -3,5 +3,5 @@ const { contextBridge, shell } = require("electron");
 const path = require("path");
 contextBridge.exposeInMainWorld("electron", {
     absPath: () => path.resolve(),
-    opePath: (file) => shell.openPath(path.resolve() + file)
+    opePath: (file) => shell.openPath(path.resolve() + "\\resources\\app" + file)
 });
