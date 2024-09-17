@@ -8,7 +8,7 @@ const ParameterPath = AbsPath + "\\data\\PdfToExcel_Parametros.xlsx";
 const FolderPath = AbsPath + "\\archivos\\";
 const ExcelOutputPath = AbsPath + "\\data\\ExcelResumenFactura.xlsx";
 
-module.exports.main = async () => {
+module.exports.main = async (res) => {
   const workbook = new ExcelJS.Workbook();
   await workbook.xlsx.readFile(ParameterPath);
   const parameterrow = [];

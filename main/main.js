@@ -2,11 +2,14 @@
 const { app, BrowserWindow } = require('electron')
 const path = require("path");
 const absPath = path.resolve()
+const express = require('express');
+const server = express();
+const { main } = require('../funct/funct1');
+const { main2 } = require('../funct/funct2');
 
-const { main } = require("../funct/funct1.js")
-
-main()
-
+server.get("/funct1", (req, res) => main().then(() => res.sendStatus(200)));
+server.get("/funct2", (req, res) => main2().then(() => res.sendStatus(200)));
+server.listen(4321);
 
 const createWindow = () => {
     const win = new BrowserWindow({
@@ -21,7 +24,7 @@ const createWindow = () => {
             preload: path.join(__dirname, "preload.js"),
         },
     })
-    win.loadFile('main/index.html').then(() => win.webContents.send("absPath", absPath))
+    win.loadFile('main/index.html')
 }
 
 app.whenReady().then(() => {

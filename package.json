@@ -9,22 +9,13 @@
     "package": "electron-forge package",
     "make": "electron-forge make"
   },
-  "pkg": {
-    "assets": [
-      "node_modules/**/*"
-    ],
-    "targets": [
-      "node18"
-    ],
-    "output": "EterEnergy_PdfToExcel.exe"
-  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "exceljs": "^4.4.0",
-    "pdf-parse": "^1.1.1",
-    "pdfjs-dist": "^4.6.82"
+    "express": "^4.21.0",
+    "pdf-parse": "^1.1.1"
   },
   "devDependencies": {
     "@electron-forge/cli": "^7.4.0",

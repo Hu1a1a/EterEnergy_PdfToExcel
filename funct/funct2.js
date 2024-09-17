@@ -7,7 +7,7 @@ const workbookResumen = new ExcelJS.Workbook();
 const worksheetResumen = workbookResumen.addWorksheet("Resumen");
 const AbsPath = path.resolve();
 const FolderPath = AbsPath + "\\archivos2\\";
-const ExcelOutputPath = AbsPath + "\\ExcelResumenFactura2.xlsx";
+const ExcelOutputPath = AbsPath + "\\data\\ExcelResumenFactura2.xlsx";
 const columna = ["Oferta", "CUPS", "Precio", "Companya", "Repetido"]
 
 module.exports.main2 = async () => {

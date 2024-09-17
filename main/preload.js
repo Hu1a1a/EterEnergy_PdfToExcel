@@ -1,10 +1,7 @@
 "use strict";
-const { contextBridge, ipcRenderer } = require("electron");
-
-const { main } = require("../funct/funct1.js")
-const { main2 } = require("../funct/funct2.js")
-
+const { contextBridge, shell } = require("electron");
+const path = require("path");
 contextBridge.exposeInMainWorld("electron", {
-  Funct1: () => main(),
-  Funct2: () => main2()
+    absPath: () => path.resolve(),
+    opePath: (file) => shell.openPath(path.resolve() + file)
 });
