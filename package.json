@@ -1,6 +1,6 @@
 {
   "name": "eterenergy_pdftoexcel",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "build to eter energy to transform pdf to excel",
   "authors": "YK Web Studio - Yang Ye",
   "main": "main/main.js",
