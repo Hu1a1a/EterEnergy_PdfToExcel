@@ -4,6 +4,9 @@ const ExcelJS = require("exceljs");
 const path = require("path");
 const exec = require("child_process").exec;
 const AbsPath = path.resolve();
+//const ParameterPath = AbsPath + "\\data\\PdfToExcel_Parametros.xlsx";
+//const FolderPath = AbsPath + "\\archivos\\";
+//const ExcelOutputPath = AbsPath + "\\data\\ExcelResumenFactura.xlsx";
 const ParameterPath = AbsPath + "\\resources\\app" + "\\data\\PdfToExcel_Parametros.xlsx";
 const FolderPath = AbsPath + "\\resources\\app" + "\\archivos\\";
 const ExcelOutputPath = AbsPath + "\\resources\\app" + "\\data\\ExcelResumenFactura.xlsx";
@@ -48,10 +51,17 @@ const extractData = (lines, parameter, indexx) => {
               data[parameter[i + 1][1]] = null;
             } else {
               if (parameter[i + 1][4]) {
-                if (data[parameter[i + 1][1]].split(parameter[i + 1][4])[parameter[i + 1][5]]?.trim())
-                  data[parameter[i + 1][1]] = data[parameter[i + 1][1]].split(parameter[i + 1][4])[parameter[i + 1][5]]?.trim();
-                else data[parameter[i + 1][1]] = data[parameter[i + 1][1]].split(parameter[i + 1][4])[parameter[i + 1][5] + 1]?.trim();
-
+                if (parameter[i + 1][5]) {
+                  if (parameter[i + 1][5] >= 0) {
+                    if (data[parameter[i + 1][1]].split(parameter[i + 1][4])[parameter[i + 1][5]]?.trim())
+                      data[parameter[i + 1][1]] = data[parameter[i + 1][1]].split(parameter[i + 1][4])[parameter[i + 1][5]]?.trim();
+                    else data[parameter[i + 1][1]] = data[parameter[i + 1][1]].split(parameter[i + 1][4])[parameter[i + 1][5] + 1]?.trim();
+                  } else {
+                    if (data[parameter[i + 1][1]].split(parameter[i + 1][4])[data[parameter[i + 1][1]].split(parameter[i + 1][4]).length + parameter[i + 1][5]]?.trim())
+                      data[parameter[i + 1][1]] = data[parameter[i + 1][1]].split(parameter[i + 1][4])[data[parameter[i + 1][1]].split(parameter[i + 1][4]).length + parameter[i + 1][5]]?.trim();
+                    else data[parameter[i + 1][1]] = data[parameter[i + 1][1]].split(parameter[i + 1][4])[data[parameter[i + 1][1]].split(parameter[i + 1][4]).length + parameter[i + 1][5] - 1]?.trim();
+                  }
+                }
                 if (parameter[i + 1][6]) {
                   if (data[parameter[i + 1][1]].split(parameter[i + 1][6])[parameter[i + 1][7]]?.trim())
                     data[parameter[i + 1][1]] = data[parameter[i + 1][1]].split(parameter[i + 1][6])[parameter[i + 1][7]]?.trim();
