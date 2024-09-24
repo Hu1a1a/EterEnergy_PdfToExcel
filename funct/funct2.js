@@ -93,7 +93,7 @@ async function paintColor(data) {
   const dataR = encontrarRepetidos(data.map((a) => a['2'] + parseFloat(a['3'])))
   for (const d in dataR) {
     if (dataR[d]) {
-      worksheetResumen.getCell(+d + 1, +Object.keys(columna)[Object.keys(columna).length - 1]).value = "Repetido"
+      worksheetResumen.getCell(+d + 2, +Object.keys(columna)[Object.keys(columna).length - 1] + 1).value = "Repetido"
       worksheetResumen.getRow(+d + 2).fill = {
         type: "pattern",
         pattern: "solid",
