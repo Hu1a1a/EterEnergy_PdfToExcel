@@ -6,9 +6,11 @@ const exec = require("child_process").exec;
 const workbookResumen = new ExcelJS.Workbook();
 const worksheetResumen = workbookResumen.addWorksheet("Resumen");
 const AbsPath = path.resolve();
-const FolderPath = AbsPath + "\\resources\\app" + "\\archivos2\\";
-const ExcelOutputPath = AbsPath + "\\resources\\app" + "\\data\\ExcelResumenFactura2.xlsx";
-const columna = ["Oferta", "CUPS", "Precio", "Companya", "Repetido"]
+//const FolderPath = AbsPath + "\\resources\\app" + "\\archivos2\\";
+//const ExcelOutputPath = AbsPath + "\\resources\\app" + "\\data\\ExcelResumenFactura2.xlsx";
+const FolderPath = AbsPath + "\\archivos2\\";
+const ExcelOutputPath = AbsPath + "\\data\\ExcelResumenFactura2.xlsx";
+const columna = ["Oferta", "CUPS", "Precio", "Nombre", "Compañia", "Oferta", "Repetido"]
 
 module.exports.main2 = async () => {
   worksheetResumen.addRow(columna)
@@ -39,19 +41,43 @@ const extractData = (lines, filename) => {
         data[i] = {}
         data[i][1] = filename
         data[i][2] = line.split("xYYx")[0];
-        let d = ""
-        if (line.split("xYYx")[1]) { d += line.split("xYYx")[1] + " " }
+        let nombre = "", compania = "", oferta = "", nombreLevel = 1, companiaLevel = 1
+        if (line.split("xYYx")[1]) nombre += line.split("xYYx")[1] + " "
+        if (line.split("xYYx")[2]) compania += line.split("xYYx")[2] + " "
         if (!CUP_Reg.test(lines[index + 1]) && !lines[index + 1].includes("€")) {
-          d += lines[index + 1] + " "
-          if (!CUP_Reg.test(lines[index + 2]) && !lines[index + 2].includes("€")) {
-            d += lines[index + 2] + " "
-            if (!CUP_Reg.test(lines[index + 3]) && !lines[index + 3].includes("€")) {
-              d += lines[index + 3] + " "
-              if (!CUP_Reg.test(lines[index + 4]) && !lines[index + 4].includes("€")) d += lines[index + 4] + " "
+          nombre += lines[index + 1] + " "
+          const pdfPost = findYposition(lines[index + 1])
+          if (pdfPost) {
+            for (const i of [2, 3, 4, 5, 6, 7, 8]) {
+              if (lines[index + i] && findYposition(lines[index + i])?.transform[4] == pdfPost.transform[4]) nombre += lines[index + i] + " "
+              else break
+              nombreLevel = i
+            }
+            const pdfPost2 = findYposition(lines[index + nombreLevel + 1])
+            if (pdfPost2) {
+              for (const i of [3, 4, 5, 6, 7, 8]) {
+                if (nombreLevel < i) {
+                  if (lines[index + i] && findYposition(lines[index + i])?.transform[4] === pdfPost2.transform[4]) compania += lines[index + i] + " "
+                  else break
+                  companiaLevel = i
+                }
+              }
+              const pdfPost3 = findYposition(lines[index + companiaLevel + 1])
+              if (pdfPost3) {
+
+                for (const i of [3, 4, 5, 6, 7, 8]) {
+                  if (companiaLevel < i) {
+                    if (lines[index + i] && findYposition(lines[index + i])?.transform[4] === pdfPost3.transform[4]) oferta += lines[index + i] + " "
+                    else break
+                  }
+                }
+              }
             }
           }
         }
-        data[i][4] = d.split("xYYx")[0]
+        data[i][4] = nombre
+        data[i][5] = compania
+        data[i][6] = oferta
       }
       if (data[i]) {
         if ((line.startsWith("2.0TD") || line.startsWith("3.0TD")) && !data[i][3]) data[i][3] = line.split("xYYx")[line.split("xYYx").length - 1]
@@ -71,17 +97,17 @@ async function extractTextFromPDF(pdfPath) {
 function render_page(pageData) {
   const render_options = { normalizeWhitespace: true, disableCombineTextItems: true, };
   return pageData.getTextContent(render_options).then(function (textContent) {
-    let lastY, text = "";
+    let lastY, lastX, text = "";
     for (let item of textContent.items) {
       if (lastY == item.transform[5] || !lastY) text += "xYYx" + item.str;
+      else if (lastX == item.transform[4] || !lastY) text += "xYYx" + item.str;
       else text += "\n" + item.str;
       lastY = item.transform[5];
+      lastX = item.transform[4];
     }
     return text;
   });
 }
-
-
 
 async function writeDataToExcel(data) {
   row = [];
